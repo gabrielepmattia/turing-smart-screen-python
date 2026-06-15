@@ -24,8 +24,13 @@
 
 import math
 import platform
+import socket
+import subprocess
+import time
 from abc import ABC, abstractmethod
 from typing import List
+
+import requests
 
 
 # Custom data classes must be implemented in this file, inherit the CustomDataSource and implement its 2 methods
@@ -98,4 +103,110 @@ class ExampleCustomTextOnlyData(CustomDataSource):
 
     def last_values(self) -> List[float]:
         # If a custom data class only has text values, it won't be possible to display line graph
+        pass
+
+
+# Local IP address (LAN) - detected from the default route, without sending traffic
+class LocalIP(CustomDataSource):
+    def as_numeric(self) -> float:
+        # Text only: no numeric value
+        pass
+
+    def as_string(self) -> str:
+        ip = "N/A"
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.settimeout(0.3)
+            # No packet is actually sent: it only selects the outbound interface
+            s.connect(("8.8.8.8", 80))
+            ip = s.getsockname()[0]
+            s.close()
+        except Exception:
+            ip = "N/A"
+        # Fixed-width padding (monospace font) to avoid ghosting
+        return f"{ip:<15}"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Public IP address (WAN) - queried online and cached (refreshed every 5 min)
+class PublicIP(CustomDataSource):
+    _cached_ip = "..."
+    _last_fetch = 0.0
+    _refresh_interval = 300  # seconds between refreshes
+
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        now = time.time()
+        if PublicIP._last_fetch == 0.0 or (now - PublicIP._last_fetch) >= PublicIP._refresh_interval:
+            try:
+                ip = requests.get("https://api.ipify.org", timeout=2).text.strip()
+                if ip:
+                    PublicIP._cached_ip = ip
+                    PublicIP._last_fetch = now
+                else:
+                    raise ValueError("empty response")
+            except Exception:
+                # On error, retry in ~30s instead of waiting the whole interval
+                PublicIP._last_fetch = now - PublicIP._refresh_interval + 30
+                if PublicIP._cached_ip == "...":
+                    PublicIP._cached_ip = "N/A"
+        return f"{PublicIP._cached_ip:<15}"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Helper: queries nvidia-smi once per cycle and caches clock + fan
+# (GPUtil does not expose these two values for NVIDIA GPUs)
+class _NvidiaSmi:
+    _ts = 0.0
+    _clock = "N/A"
+    _fan = "N/A"
+
+    @classmethod
+    def refresh(cls):
+        now = time.time()
+        if cls._ts != 0.0 and (now - cls._ts) < 1.5:
+            return  # data still fresh: avoid back-to-back calls from the two sensors
+        cls._ts = now
+        try:
+            out = subprocess.run(
+                ["nvidia-smi", "--query-gpu=clocks.gr,fan.speed",
+                 "--format=csv,noheader,nounits"],
+                capture_output=True, text=True, timeout=2,
+            )
+            clock, fan = out.stdout.strip().split(",")
+            cls._clock = clock.strip()
+            cls._fan = fan.strip()
+        except Exception:
+            pass
+
+
+# GPU core clock (MHz) read from nvidia-smi
+class GpuClock(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        _NvidiaSmi.refresh()
+        return f"{_NvidiaSmi._clock:>4}"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# GPU fan speed (%) read from nvidia-smi
+class GpuFan(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        _NvidiaSmi.refresh()
+        return f"{_NvidiaSmi._fan:>3}%"
+
+    def last_values(self) -> List[float]:
         pass

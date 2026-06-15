@@ -10,7 +10,7 @@ config:
   # Theme to use (located in res/themes)
   # Use the name of the folder as value
   # Choose a theme made for your screen size (see DISPLAY_SIZE inside theme.yaml)
-  THEME: 3.5inchTheme2
+  THEME: LightDash5inch
 
   # Hardware sensors reading
   # Choose the appropriate method for reading your hardware sensors:
@@ -24,7 +24,7 @@ config:
   # Linux/MacOS interfaces are named "eth0", "wlan0", "wlp1s0", "enp2s0"...
   # For Windows use the interfaces pretty name: "Ethernet 2", "Wi-Fi", ...
   # Leave the fields empty if the card does not exist on your setup
-  ETH: "" # Ethernet Card
+  ETH: "enp39s0" # Ethernet Card
   WLO: "" # Wi-Fi Card
 
   # CPU fan
@@ -32,7 +32,7 @@ config:
   # If value is AUTO the system monitor will try to auto-select the CPU fan
   # If auto-detection fails, it might be necessary to manually indicate which fan is the CPU fan
   # Value must be 'controller/fan' e.g. 'nct6798/fan2'. Use configuration wizard for help in selection
-  CPU_FAN: AUTO
+  CPU_FAN: nct6797/fan2
 
   # Address used for ping sensor. Can be internal/external IP (e.g. 8.8.8.8 or 192.168.0.1) or hostname (google.com)
   PING: 8.8.8.8
@@ -61,7 +61,7 @@ display:
   # - WEACT_B   for WeAct Studio Display FS V1 0.96"
   # - SIMU for simulated display (image written in screencap.png). Width & height will be detected from the theme
   # To identify your smart screen: https://github.com/mathoudebine/turing-smart-screen-python/wiki/Hardware-revisions
-  REVISION: A
+  REVISION: C
 
   # Display Brightness
   # Set this as the desired %, 0 being completely dark and 100 being max brightness
