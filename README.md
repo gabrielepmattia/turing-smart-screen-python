@@ -14,6 +14,43 @@ A Python system monitor program and an abstraction library for **small IPS USB-C
 
 Supported operating systems : macOS, Windows, Linux (incl. Raspberry Pi), basically all OS that support Python 3.9+  
 
+---
+
+## ⭐ Personal fork
+
+This is a personal fork of [mathoudebine/turing-smart-screen-python](https://github.com/mathoudebine/turing-smart-screen-python) with a custom theme, extra sensors and my own configuration. Pull upstream updates with `git pull upstream main`.
+
+### Custom theme: `LightDash5inch`
+
+A light/clean 5" landscape theme focused on CPU, GPU, network and temperatures, with history graphs.
+
+![LightDash5inch preview](res/themes/LightDash5inch/preview.png)
+
+It displays:
+- **CPU**: usage % + history graph, temperature, frequency, fan %, load average
+- **GPU**: usage % + history graph, temperature, core clock, fan %, VRAM used
+- **Network**: live download/upload + history graphs + total transferred
+- **IP**: local (LAN) and public (WAN) address
+- **Memory / Storage**: RAM and disk usage bars
+- **Header**: date and time
+
+### Custom data sources
+
+Added to `library/sensors/sensors_custom.py`:
+- `LocalIP` — LAN address from the default route
+- `PublicIP` — WAN address from `api.ipify.org` (cached, refreshed every 5 min)
+- `GpuClock` / `GpuFan` — NVIDIA core clock and fan read from `nvidia-smi` (not exposed by GPUtil)
+
+### Setup
+
+See [`AUTOSTART.md`](AUTOSTART.md) to run the monitor and enable auto-start with a systemd user service. To regenerate the theme background after editing the layout:
+
+```bash
+venv/bin/python res/themes/LightDash5inch/_generate_background.py
+```
+
+---
+
 ### ✅ Supported smart screens models:
 
 | ✅ Turing Smart Screen / TURZX                                                                                                                                                                                                                                                                                                                                                                  |
