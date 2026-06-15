@@ -210,3 +210,78 @@ class GpuFan(CustomDataSource):
 
     def last_values(self) -> List[float]:
         pass
+
+
+# Helper: current weather from Open-Meteo (free, no API key). Location is
+# auto-detected from the public IP via ip-api.com. Both are cached and the
+# weather is refreshed every 15 minutes.
+class _Weather:
+    _ts = 0.0
+    _interval = 900  # seconds between refreshes (15 min)
+    _lat = None
+    _lon = None
+    _temp = "--"
+    _desc = "..."
+
+    # WMO weather codes -> short text description
+    _CODES = {
+        0: "Clear", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
+        45: "Fog", 48: "Rime fog",
+        51: "Drizzle", 53: "Drizzle", 55: "Drizzle",
+        56: "Freezing drizzle", 57: "Freezing drizzle",
+        61: "Rain", 63: "Rain", 65: "Heavy rain",
+        66: "Freezing rain", 67: "Freezing rain",
+        71: "Snow", 73: "Snow", 75: "Heavy snow", 77: "Snow grains",
+        80: "Showers", 81: "Showers", 82: "Heavy showers",
+        85: "Snow showers", 86: "Snow showers",
+        95: "Thunderstorm", 96: "Thunderstorm", 99: "Thunderstorm",
+    }
+
+    @classmethod
+    def refresh(cls):
+        now = time.time()
+        if cls._ts != 0.0 and (now - cls._ts) < cls._interval:
+            return  # data still fresh
+        try:
+            if cls._lat is None:
+                geo = requests.get("http://ip-api.com/json", timeout=2).json()
+                cls._lat, cls._lon = geo["lat"], geo["lon"]
+            r = requests.get(
+                "https://api.open-meteo.com/v1/forecast"
+                f"?latitude={cls._lat}&longitude={cls._lon}"
+                "&current=temperature_2m,weather_code",
+                timeout=2,
+            ).json()
+            cur = r["current"]
+            cls._temp = f"{round(cur['temperature_2m'])}°C"
+            cls._desc = cls._CODES.get(cur["weather_code"], "")
+            cls._ts = now
+        except Exception:
+            # Retry in ~1 min on error instead of waiting the whole interval
+            cls._ts = now - cls._interval + 60
+
+
+# Current outside temperature (Open-Meteo)
+class WeatherTemp(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        _Weather.refresh()
+        return _Weather._temp
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Current weather description (Open-Meteo)
+class WeatherDesc(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        _Weather.refresh()
+        return _Weather._desc
+
+    def last_values(self) -> List[float]:
+        pass

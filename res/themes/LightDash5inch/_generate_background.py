@@ -53,7 +53,8 @@ def label(xy, text, color=SUB, f=None):
 # ===================== HEADER =====================
 label((16, 12), "SYSTEM MONITOR", color=INK, f=F_TITLE(20))
 label((16, 36), "Ryzen 9 3900XT  ·  RTX 4080", color=SUB, f=F_REG(12))
-# date + time are drawn dynamically by the theme (top right)
+# divider before the weather widget (weather, date and time are drawn dynamically)
+d.line((282, 12, 282, 48), fill=BORDER, width=1)
 
 # ===================== CPU CARD =====================
 card((12, 60, 396, 262), accent=CPU_C)

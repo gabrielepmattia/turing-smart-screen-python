@@ -32,7 +32,7 @@ It displays:
 - **Network**: live download/upload + history graphs + total transferred
 - **IP**: local (LAN) and public (WAN) address
 - **Memory / Storage**: RAM and disk usage bars
-- **Header**: date and time
+- **Header**: current weather, date and 24h time
 
 ### Custom data sources
 
@@ -40,6 +40,7 @@ Added to `library/sensors/sensors_custom.py`:
 - `LocalIP` — LAN address from the default route
 - `PublicIP` — WAN address from `api.ipify.org` (cached, refreshed every 5 min)
 - `GpuClock` / `GpuFan` — NVIDIA core clock and fan read from `nvidia-smi` (not exposed by GPUtil)
+- `WeatherTemp` / `WeatherDesc` — current weather from [Open-Meteo](https://open-meteo.com) (free, no API key); location auto-detected from the public IP via ip-api.com, refreshed every 15 min
 
 ### Setup
 

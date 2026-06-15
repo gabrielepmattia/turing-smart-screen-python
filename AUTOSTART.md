@@ -114,7 +114,9 @@ local and public IP, plus RAM/disk bars.
   venv/bin/python res/themes/LightDash5inch/_generate_background.py
   ```
 
-The local/public IP and GPU clock/fan values come from custom data sources added
-to `library/sensors/sensors_custom.py` (`LocalIP`, `PublicIP`, `GpuClock`,
-`GpuFan`). The public IP is fetched from `api.ipify.org` and cached (refreshed
-every 5 minutes).
+The local/public IP, GPU clock/fan and weather values come from custom data
+sources added to `library/sensors/sensors_custom.py` (`LocalIP`, `PublicIP`,
+`GpuClock`, `GpuFan`, `WeatherTemp`, `WeatherDesc`). The public IP is fetched
+from `api.ipify.org` and cached (refreshed every 5 minutes). The weather comes
+from Open-Meteo (free, no API key) with the location auto-detected from the
+public IP; it is refreshed every 15 minutes.

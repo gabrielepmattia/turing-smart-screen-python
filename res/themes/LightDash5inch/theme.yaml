@@ -226,11 +226,11 @@ STATS:
           WIDTH: 182
           HEIGHT: 74
           MIN_VALUE: 0
-          MAX_VALUE: 100
+          MAX_VALUE: 10000000000
           HISTORY_SIZE: 120
           AUTOSCALE: True
           LINE_COLOR: 14, 165, 233
-          AXIS: True
+          AXIS: False
           AXIS_COLOR: 150, 159, 173
           AXIS_FONT: roboto-mono/RobotoMono-Medium.ttf
           AXIS_FONT_SIZE: 9
@@ -264,11 +264,11 @@ STATS:
           WIDTH: 182
           HEIGHT: 74
           MIN_VALUE: 0
-          MAX_VALUE: 100
+          MAX_VALUE: 10000000000
           HISTORY_SIZE: 120
           AUTOSCALE: True
           LINE_COLOR: 139, 92, 246
-          AXIS: True
+          AXIS: False
           AXIS_COLOR: 150, 159, 173
           AXIS_FONT: roboto-mono/RobotoMono-Medium.ttf
           AXIS_FONT_SIZE: 9
@@ -291,9 +291,9 @@ STATS:
       TEXT:
         FORMAT: medium
         SHOW: True
-        X: 460
-        Y: 20
-        WIDTH: 160
+        X: 636
+        Y: 40
+        WIDTH: 150
         HEIGHT: 20
         ANCHOR: rt
         FONT: roboto-mono/RobotoMono-Medium.ttf
@@ -302,10 +302,10 @@ STATS:
         BACKGROUND_IMAGE: background.png
     HOUR:
       TEXT:
-        FORMAT: short
+        FORMAT: "HH:mm"
         SHOW: True
         X: 626
-        Y: 10
+        Y: 8
         WIDTH: 160
         HEIGHT: 32
         ANCHOR: rt
@@ -316,6 +316,28 @@ STATS:
 
   CUSTOM:
     INTERVAL: 3
+    WeatherTemp:
+      TEXT:
+        SHOW: True
+        X: 300
+        Y: 11
+        WIDTH: 110
+        HEIGHT: 30
+        FONT: roboto-mono/RobotoMono-Bold.ttf
+        FONT_SIZE: 23
+        FONT_COLOR: 33, 43, 58
+        BACKGROUND_IMAGE: background.png
+    WeatherDesc:
+      TEXT:
+        SHOW: True
+        X: 302
+        Y: 41
+        WIDTH: 220
+        HEIGHT: 18
+        FONT: roboto/Roboto-Medium.ttf
+        FONT_SIZE: 12
+        FONT_COLOR: 132, 142, 158
+        BACKGROUND_IMAGE: background.png
     GpuClock:
       TEXT:
         SHOW: True
