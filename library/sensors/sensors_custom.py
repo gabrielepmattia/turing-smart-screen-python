@@ -24,12 +24,14 @@
 
 import math
 import platform
+import re
 import socket
 import subprocess
 import time
 from abc import ABC, abstractmethod
 from typing import List
 
+import psutil
 import requests
 
 
@@ -282,6 +284,124 @@ class WeatherDesc(CustomDataSource):
     def as_string(self) -> str:
         _Weather.refresh()
         return _Weather._desc
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# RAM usage as absolute values "used/total GB" (the native MEMORY sensor only exposes MB)
+class RamUsage(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        try:
+            m = psutil.virtual_memory()
+            return f"{m.used / 1024 ** 3:.1f}/{m.total / 1024 ** 3:.0f} GB"
+        except Exception:
+            return "--"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Root filesystem usage as absolute values "used/total GB"
+class DiskUsage(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        try:
+            d = psutil.disk_usage("/")
+            return f"{d.used / 1000 ** 3:.0f}/{d.total / 1000 ** 3:.0f} GB"
+        except Exception:
+            return "--"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# System uptime in compact form (e.g. "3d 5h", "5h 12m", "12m")
+class Uptime(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        try:
+            secs = int(time.time() - psutil.boot_time())
+        except Exception:
+            return "--"
+        days, rem = divmod(secs, 86400)
+        hours, rem = divmod(rem, 3600)
+        mins = rem // 60
+        if days > 0:
+            return f"{days}d {hours}h"
+        if hours > 0:
+            return f"{hours}h {mins}m"
+        return f"{mins}m"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Network latency to 8.8.8.8 via the system 'ping' (no root needed, unlike raw ICMP).
+# Cached and refreshed every ~2s so the blocking subprocess does not slow the custom cycle.
+class PingLatency(CustomDataSource):
+    _cached = "--"
+    _last = 0.0
+
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        now = time.time()
+        if now - PingLatency._last >= 2:
+            PingLatency._last = now
+            try:
+                out = subprocess.run(
+                    ["ping", "-c", "1", "-W", "1", "8.8.8.8"],
+                    capture_output=True, text=True, timeout=2,
+                ).stdout
+                m = re.search(r"time=([\d.]+)", out)
+                PingLatency._cached = f"{round(float(m.group(1)))} ms" if m else "--"
+            except Exception:
+                PingLatency._cached = "--"
+        return f"{PingLatency._cached:<7}"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Helper: read a temperature by chip name + label from psutil (cached briefly)
+def _temp_by_label(chip: str, label: str) -> str:
+    try:
+        for entry in psutil.sensors_temperatures().get(chip, []):
+            if entry.label == label:
+                return f"{round(entry.current)}°C"
+    except Exception:
+        pass
+    return "--"
+
+
+# SSD NVMe temperature (nvme / Composite)
+class NvmeTemp(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        return _temp_by_label("nvme", "Composite")
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Motherboard / system temperature (nct6797 / SYSTIN)
+class MoboTemp(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        return _temp_by_label("nct6797", "SYSTIN")
 
     def last_values(self) -> List[float]:
         pass

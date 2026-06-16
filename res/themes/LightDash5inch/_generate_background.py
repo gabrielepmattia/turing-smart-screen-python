@@ -55,6 +55,10 @@ label((16, 12), "SYSTEM MONITOR", color=INK, f=F_TITLE(20))
 label((16, 36), "Ryzen 9 3900XT  ·  RTX 4080", color=SUB, f=F_REG(12))
 # divider before the weather widget (weather, date and time are drawn dynamically)
 d.line((282, 12, 282, 48), fill=BORDER, width=1)
+# divider + SSD / motherboard temperature labels (values drawn dynamically)
+d.line((524, 12, 524, 48), fill=BORDER, width=1)
+label((532, 13), "SSD", color=SUB, f=F_MED(10))
+label((532, 33), "MB", color=SUB, f=F_MED(10))
 
 # ===================== CPU CARD =====================
 card((12, 60, 396, 262), accent=CPU_C)
@@ -80,6 +84,9 @@ for cx, lab in ((420, "TEMP"), (512, "CLOCK MHz"), (604, "FAN"), (696, "VRAM")):
 card((12, 270, 788, 388))
 label((28, 282), "NETWORK", color=INK, f=F_TITLE(18))
 label((140, 287), "enp39s0", color=SUB, f=F_REG(13))
+# uptime / ping labels (values drawn dynamically)
+label((250, 287), "UPTIME", color=SUB, f=F_MED(10))
+label((560, 287), "PING", color=SUB, f=F_MED(10))
 d.line((400, 282, 400, 380), fill=BORDER, width=1)
 
 def arrow(cx, cy, up, color):
@@ -110,8 +117,9 @@ label((420, 405), "MEMORY / STORAGE", color=INK, f=F_TITLE(14))
 label((420, 428), "RAM", color=SUB, f=F_MED(11))
 label((420, 448), "DISK", color=SUB, f=F_MED(11))
 # bar tracks (background) - the colored fill is drawn on top by the theme
-d.rounded_rectangle((470, 430, 735, 438), radius=4, fill=TRACK)
-d.rounded_rectangle((470, 450, 735, 458), radius=4, fill=TRACK)
+# shortened to leave room for the absolute used/total GB values on the right
+d.rounded_rectangle((470, 430, 620, 438), radius=4, fill=TRACK)
+d.rounded_rectangle((470, 450, 620, 458), radius=4, fill=TRACK)
 
 img.save(os.path.join(HERE, "background.png"))
 print("background.png saved:", os.path.join(HERE, "background.png"))
