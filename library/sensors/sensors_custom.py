@@ -422,6 +422,36 @@ class DiskUsage(CustomDataSource):
         pass
 
 
+# RAM free space in GB (available memory)
+class RamFree(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        try:
+            return f"{psutil.virtual_memory().available / 1024 ** 3:.0f} GB free"
+        except Exception:
+            return "--"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Root filesystem free space in GB
+class DiskFree(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        try:
+            return f"{psutil.disk_usage('/').free / 1000 ** 3:.0f} GB free"
+        except Exception:
+            return "--"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
 # System uptime in compact form (e.g. "3d 5h", "5h 12m", "12m")
 class Uptime(CustomDataSource):
     def as_numeric(self) -> float:

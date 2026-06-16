@@ -438,7 +438,7 @@ STATS:
         FONT_SIZE: 14
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
-    RamUsage:
+    RamFree:
       TEXT:
         SHOW: True
         X: 628
@@ -449,7 +449,7 @@ STATS:
         FONT_SIZE: 12
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
-    DiskUsage:
+    DiskFree:
       TEXT:
         SHOW: True
         X: 628
