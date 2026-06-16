@@ -280,35 +280,54 @@ class LcdComm(ABC):
             text_image = self.open_image(background_image)
 
         # Get text bounding box
-        ttfont = self.open_font(font, font_size)
         d = ImageDraw.Draw(text_image)
 
-        if width == 0 or height == 0:
-            left, top, right, bottom = d.textbbox((x, y), text, font=ttfont, align=align, anchor=anchor)
-
-            # textbbox may return float values, which is not good for the bitmap operations below.
-            # Let's extend the bounding box to the next whole pixel in all directions
-            left, top = math.floor(left), math.floor(top)
-            right, bottom = math.ceil(right), math.ceil(bottom)
+        # NotoColorEmoji is a bitmap-only color font: it can only be rasterized at
+        # its native strike size and requires embedded_color. Render the glyph on
+        # its own, scale it down to the requested size and paste it as a color icon.
+        if "NotoColorEmoji" in font:
+            emoji_font = self.open_font(font, 109)
+            glyph = Image.new("RGBA", (140, 140), (0, 0, 0, 0))
+            ImageDraw.Draw(glyph).text((0, 0), text, font=emoji_font, embedded_color=True)
+            bbox = glyph.getbbox()
+            if bbox:
+                glyph = glyph.crop(bbox)
+            target_h = height if height > 0 else font_size
+            scale = target_h / glyph.height
+            glyph = glyph.resize((max(1, round(glyph.width * scale)), target_h), Image.LANCZOS)
+            text_image.paste(glyph, (x, y), glyph)
+            left, top = x, y
+            right = x + (width if width > 0 else glyph.width)
+            bottom = y + (height if height > 0 else glyph.height)
         else:
-            left, top, right, bottom = x, y, x + width, y + height
+            ttfont = self.open_font(font, font_size)
 
-            if anchor.startswith("m"):
-                x = int((right + left) / 2)
-            elif anchor.startswith("r"):
-                x = right
+            if width == 0 or height == 0:
+                left, top, right, bottom = d.textbbox((x, y), text, font=ttfont, align=align, anchor=anchor)
+
+                # textbbox may return float values, which is not good for the bitmap operations below.
+                # Let's extend the bounding box to the next whole pixel in all directions
+                left, top = math.floor(left), math.floor(top)
+                right, bottom = math.ceil(right), math.ceil(bottom)
             else:
-                x = left
+                left, top, right, bottom = x, y, x + width, y + height
 
-            if anchor.endswith("m"):
-                y = int((bottom + top) / 2)
-            elif anchor.endswith("b"):
-                y = bottom
-            else:
-                y = top
+                if anchor.startswith("m"):
+                    x = int((right + left) / 2)
+                elif anchor.startswith("r"):
+                    x = right
+                else:
+                    x = left
 
-        # Draw text onto the background image with specified color & font
-        d.text((x, y), text, font=ttfont, fill=font_color, align=align, anchor=anchor)
+                if anchor.endswith("m"):
+                    y = int((bottom + top) / 2)
+                elif anchor.endswith("b"):
+                    y = bottom
+                else:
+                    y = top
+
+            # Draw text onto the background image with specified color & font
+            d.text((x, y), text, font=ttfont, fill=font_color, align=align, anchor=anchor)
 
         # Restrict the dimensions if they overflow the display size
         left = max(left, 0)

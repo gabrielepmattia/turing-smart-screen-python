@@ -70,6 +70,10 @@ d.line((26, 176, 382, 176), fill=BORDER, width=1)
 # 4 cells at the bottom
 for cx, lab in ((28, "TEMP"), (120, "FREQ GHz"), (212, "FAN %"), (304, "LOAD")):
     label((cx, 184), lab, color=SUB, f=F_MED(10))
+# second row: load 5m/15m + case fan speeds
+d.line((26, 226, 382, 226), fill=BORDER, width=1)
+for cx, lab in ((28, "LOAD 5m"), (120, "LOAD 15m"), (212, "CASE FANS (RPM)")):
+    label((cx, 230), lab, color=SUB, f=F_MED(9))
 
 # ===================== GPU CARD =====================
 card((404, 60, 788, 262), accent=GPU_C)
@@ -79,6 +83,10 @@ label((422, 158), "USAGE", color=SUB, f=F_MED(11))
 d.line((418, 176, 774, 176), fill=BORDER, width=1)
 for cx, lab in ((420, "TEMP"), (512, "CLOCK MHz"), (604, "FAN"), (696, "VRAM")):
     label((cx, 184), lab, color=SUB, f=F_MED(10))
+# second row: power / memory clock / pstate / process count
+d.line((418, 226, 774, 226), fill=BORDER, width=1)
+for cx, lab in ((420, "POWER"), (512, "MEM MHz"), (604, "PSTATE"), (696, "PROCS")):
+    label((cx, 230), lab, color=SUB, f=F_MED(9))
 
 # ===================== NETWORK CARD =====================
 card((12, 270, 788, 388))

@@ -143,7 +143,8 @@ STATS:
         BACKGROUND_IMAGE: background.png
     MEMORY_USED:
       TEXT:
-        SHOW: True
+        # Replaced by the GpuVram custom sensor (used/total GB)
+        SHOW: False
         X: 696
         Y: 200
         WIDTH: 88
@@ -316,12 +317,23 @@ STATS:
 
   CUSTOM:
     INTERVAL: 3
-    WeatherTemp:
+    WeatherIcon:
       TEXT:
         SHOW: True
         X: 300
+        Y: 9
+        WIDTH: 42
+        HEIGHT: 40
+        FONT: NotoColorEmoji/NotoColorEmoji.ttf
+        FONT_SIZE: 36
+        FONT_COLOR: 33, 43, 58
+        BACKGROUND_IMAGE: background.png
+    WeatherTemp:
+      TEXT:
+        SHOW: True
+        X: 350
         Y: 11
-        WIDTH: 110
+        WIDTH: 100
         HEIGHT: 30
         FONT: roboto-mono/RobotoMono-Bold.ttf
         FONT_SIZE: 23
@@ -330,9 +342,9 @@ STATS:
     WeatherDesc:
       TEXT:
         SHOW: True
-        X: 302
+        X: 352
         Y: 41
-        WIDTH: 220
+        WIDTH: 170
         HEIGHT: 18
         FONT: roboto/Roboto-Medium.ttf
         FONT_SIZE: 12
@@ -446,5 +458,93 @@ STATS:
         HEIGHT: 16
         FONT: roboto-mono/RobotoMono-Medium.ttf
         FONT_SIZE: 12
+        FONT_COLOR: 33, 43, 58
+        BACKGROUND_IMAGE: background.png
+    GpuVram:
+      TEXT:
+        SHOW: True
+        X: 678
+        Y: 203
+        WIDTH: 106
+        HEIGHT: 22
+        FONT: roboto-mono/RobotoMono-Bold.ttf
+        FONT_SIZE: 15
+        FONT_COLOR: 33, 43, 58
+        BACKGROUND_IMAGE: background.png
+    GpuPower:
+      TEXT:
+        SHOW: True
+        X: 420
+        Y: 242
+        WIDTH: 86
+        HEIGHT: 18
+        FONT: roboto-mono/RobotoMono-Bold.ttf
+        FONT_SIZE: 15
+        FONT_COLOR: 33, 43, 58
+        BACKGROUND_IMAGE: background.png
+    GpuMemClock:
+      TEXT:
+        SHOW: True
+        X: 512
+        Y: 242
+        WIDTH: 86
+        HEIGHT: 18
+        FONT: roboto-mono/RobotoMono-Bold.ttf
+        FONT_SIZE: 15
+        FONT_COLOR: 33, 43, 58
+        BACKGROUND_IMAGE: background.png
+    GpuPstate:
+      TEXT:
+        SHOW: True
+        X: 604
+        Y: 242
+        WIDTH: 86
+        HEIGHT: 18
+        FONT: roboto-mono/RobotoMono-Bold.ttf
+        FONT_SIZE: 15
+        FONT_COLOR: 33, 43, 58
+        BACKGROUND_IMAGE: background.png
+    ProcCount:
+      TEXT:
+        SHOW: True
+        X: 696
+        Y: 242
+        WIDTH: 86
+        HEIGHT: 18
+        FONT: roboto-mono/RobotoMono-Bold.ttf
+        FONT_SIZE: 15
+        FONT_COLOR: 33, 43, 58
+        BACKGROUND_IMAGE: background.png
+    LoadAvg5:
+      TEXT:
+        SHOW: True
+        X: 28
+        Y: 242
+        WIDTH: 86
+        HEIGHT: 18
+        FONT: roboto-mono/RobotoMono-Bold.ttf
+        FONT_SIZE: 15
+        FONT_COLOR: 33, 43, 58
+        BACKGROUND_IMAGE: background.png
+    LoadAvg15:
+      TEXT:
+        SHOW: True
+        X: 120
+        Y: 242
+        WIDTH: 86
+        HEIGHT: 18
+        FONT: roboto-mono/RobotoMono-Bold.ttf
+        FONT_SIZE: 15
+        FONT_COLOR: 33, 43, 58
+        BACKGROUND_IMAGE: background.png
+    CaseFans:
+      TEXT:
+        SHOW: True
+        X: 212
+        Y: 244
+        WIDTH: 176
+        HEIGHT: 16
+        FONT: roboto-mono/RobotoMono-Medium.ttf
+        FONT_SIZE: 13
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png

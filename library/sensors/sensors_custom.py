@@ -23,6 +23,7 @@
 # See CustomDataExample theme for the theme implementation part
 
 import math
+import os
 import platform
 import re
 import socket
@@ -162,28 +163,39 @@ class PublicIP(CustomDataSource):
         pass
 
 
-# Helper: queries nvidia-smi once per cycle and caches clock + fan
-# (GPUtil does not expose these two values for NVIDIA GPUs)
+# Helper: queries nvidia-smi once per cycle and caches several values
+# (GPUtil does not expose clock/fan/power/pstate for NVIDIA GPUs)
 class _NvidiaSmi:
     _ts = 0.0
-    _clock = "N/A"
-    _fan = "N/A"
+    _clock = "N/A"      # core clock (MHz)
+    _fan = "N/A"        # fan speed (%)
+    _power = "N/A"      # power draw (W)
+    _memclk = "N/A"     # memory clock (MHz)
+    _pstate = "N/A"     # performance state (P0-P12)
+    _vram = "N/A"       # VRAM used/total (GB)
+
+    _FIELDS = "clocks.gr,fan.speed,power.draw,clocks.mem,pstate,memory.used,memory.total"
 
     @classmethod
     def refresh(cls):
         now = time.time()
         if cls._ts != 0.0 and (now - cls._ts) < 1.5:
-            return  # data still fresh: avoid back-to-back calls from the two sensors
+            return  # data still fresh: avoid back-to-back calls from the sensors
         cls._ts = now
         try:
             out = subprocess.run(
-                ["nvidia-smi", "--query-gpu=clocks.gr,fan.speed",
+                ["nvidia-smi", "--query-gpu=" + cls._FIELDS,
                  "--format=csv,noheader,nounits"],
                 capture_output=True, text=True, timeout=2,
             )
-            clock, fan = out.stdout.strip().split(",")
-            cls._clock = clock.strip()
-            cls._fan = fan.strip()
+            clock, fan, power, memclk, pstate, vram_used, vram_total = \
+                [v.strip() for v in out.stdout.strip().split(",")]
+            cls._clock = clock
+            cls._fan = fan
+            cls._power = str(round(float(power)))
+            cls._memclk = memclk
+            cls._pstate = pstate
+            cls._vram = f"{float(vram_used) / 1024:.1f}/{float(vram_total) / 1024:.0f} GB"
         except Exception:
             pass
 
@@ -214,6 +226,58 @@ class GpuFan(CustomDataSource):
         pass
 
 
+# GPU power draw (W) read from nvidia-smi
+class GpuPower(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        _NvidiaSmi.refresh()
+        return f"{_NvidiaSmi._power:>3} W"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# GPU memory clock (MHz) read from nvidia-smi
+class GpuMemClock(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        _NvidiaSmi.refresh()
+        return f"{_NvidiaSmi._memclk:>4}"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# GPU performance state (P0-P12) read from nvidia-smi
+class GpuPstate(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        _NvidiaSmi.refresh()
+        return f"{_NvidiaSmi._pstate:>3}"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# GPU VRAM used/total (GB) read from nvidia-smi
+class GpuVram(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        _NvidiaSmi.refresh()
+        return _NvidiaSmi._vram
+
+    def last_values(self) -> List[float]:
+        pass
+
+
 # Helper: current weather from Open-Meteo (free, no API key). Location is
 # auto-detected from the public IP via ip-api.com. Both are cached and the
 # weather is refreshed every 15 minutes.
@@ -224,6 +288,7 @@ class _Weather:
     _lon = None
     _temp = "--"
     _desc = "..."
+    _code = -1  # latest WMO weather code
 
     # WMO weather codes -> short text description
     _CODES = {
@@ -256,7 +321,8 @@ class _Weather:
             ).json()
             cur = r["current"]
             cls._temp = f"{round(cur['temperature_2m'])}°C"
-            cls._desc = cls._CODES.get(cur["weather_code"], "")
+            cls._code = cur["weather_code"]
+            cls._desc = cls._CODES.get(cls._code, "")
             cls._ts = now
         except Exception:
             # Retry in ~1 min on error instead of waiting the whole interval
@@ -284,6 +350,41 @@ class WeatherDesc(CustomDataSource):
     def as_string(self) -> str:
         _Weather.refresh()
         return _Weather._desc
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Weather condition as a color emoji icon (rendered via NotoColorEmoji).
+# Maps the WMO weather code to a representative emoji.
+class WeatherIcon(CustomDataSource):
+    _SUN = "☀️"
+    _SUN_CLOUD = "\U0001f324️"
+    _PARTLY = "⛅"
+    _CLOUD = "☁️"
+    _FOG = "\U0001f32b️"
+    _DRIZZLE = "\U0001f326️"
+    _RAIN = "\U0001f327️"
+    _SNOW = "\U0001f328️"
+    _STORM = "⛈️"
+
+    _ICONS = {
+        0: _SUN, 1: _SUN_CLOUD, 2: _PARTLY, 3: _CLOUD,
+        45: _FOG, 48: _FOG,
+        51: _DRIZZLE, 53: _DRIZZLE, 55: _DRIZZLE, 56: _DRIZZLE, 57: _DRIZZLE,
+        61: _RAIN, 63: _RAIN, 65: _RAIN, 66: _RAIN, 67: _RAIN,
+        71: _SNOW, 73: _SNOW, 75: _SNOW, 77: _SNOW,
+        80: _DRIZZLE, 81: _RAIN, 82: _RAIN,
+        85: _SNOW, 86: _SNOW,
+        95: _STORM, 96: _STORM, 99: _STORM,
+    }
+
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        _Weather.refresh()
+        return WeatherIcon._ICONS.get(_Weather._code, self._SUN)
 
     def last_values(self) -> List[float]:
         pass
@@ -402,6 +503,68 @@ class MoboTemp(CustomDataSource):
 
     def as_string(self) -> str:
         return _temp_by_label("nct6797", "SYSTIN")
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# CPU load average over 5 minutes
+class LoadAvg5(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        try:
+            return f"{os.getloadavg()[1]:.2f}"
+        except Exception:
+            return "--"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# CPU load average over 15 minutes
+class LoadAvg15(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        try:
+            return f"{os.getloadavg()[2]:.2f}"
+        except Exception:
+            return "--"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Number of running processes
+class ProcCount(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        try:
+            return str(len(psutil.pids()))
+        except Exception:
+            return "--"
+
+    def last_values(self) -> List[float]:
+        pass
+
+
+# Case fan speeds (RPM) from the nct6797 chip, only the spinning ones
+class CaseFans(CustomDataSource):
+    def as_numeric(self) -> float:
+        pass
+
+    def as_string(self) -> str:
+        try:
+            fans = psutil.sensors_fans().get("nct6797", [])
+            rpms = [str(int(e.current)) for e in fans if e.current and e.current > 0]
+            return " ".join(rpms) if rpms else "--"
+        except Exception:
+            return "--"
 
     def last_values(self) -> List[float]:
         pass
