@@ -44,18 +44,31 @@ cat > ~/.config/systemd/user/turing-smart-screen.service <<'EOF'
 Description=Turing Smart Screen - System Monitor
 Documentation=https://github.com/mathoudebine/turing-smart-screen-python
 After=default.target
+# Keep retrying without ever hitting the start-rate limiter: on a rev C 5"
+# the data port /dev/ttyACM0 disappears for several seconds on every restart
+# (USB re-enumeration), so a few quick attempts may fail before the display is
+# woken back up via /dev/ttyACM1 and the port reappears.
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple
 WorkingDirectory=/home/gpm/Applications/turing-smart-screen-python
 ExecStart=/home/gpm/Applications/turing-smart-screen-python/venv/bin/python main.py
-Restart=on-failure
-RestartSec=5
+# always (not on-failure): when the COM port is missing the program exits 0,
+# which on-failure would NOT catch, leaving the service dead after a restart.
+Restart=always
+RestartSec=8
 
 [Install]
 WantedBy=default.target
 EOF
 ```
+
+> **Note (rev C 5").** With `Restart=on-failure` a restart could leave the
+> service dead: closing the old process makes `/dev/ttyACM0` re-enumerate, the
+> new process finds the port missing and exits with code 0 (not a failure).
+> `Restart=always` + `StartLimitIntervalSec=0` let systemd keep retrying until
+> the display is back (typically one extra attempt, ~20 s), with no manual step.
 
 ### 2) Enable and start the service
 
