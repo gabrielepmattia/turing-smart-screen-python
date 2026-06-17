@@ -89,6 +89,52 @@ If you skip this step the service still starts, but only at first login.
 
 ---
 
+## Turn the screen off on suspend / back on at resume
+
+On Linux there is no built-in suspend/resume handling (the Windows build has it,
+but it does not apply here). Without it, when the PC goes to standby the running
+process keeps a now-dead serial handle open: at resume the rev C data port has
+re-enumerated (it disappears for several seconds) and the next blocking serial
+write hangs forever, leaving the **display frozen** until a manual restart. Worse,
+a write that hits the screen at the wrong moment can wedge its internal SoC into
+a hard hang where `/dev/ttyACM0` is enumerated but never drains writes — only a
+USB-level reset or unplugging the cable recovers it.
+
+The fix is a systemd `system-sleep` hook (shipped in `tools/`) that:
+
+- **before sleep** stops the user service, so it calls `ScreenOff` while the
+  device is still healthy (no stale writes survive into the suspend window);
+- **at resume** issues a USB reset to the screen (un-wedges a hung SoC; harmless
+  on a healthy one) and starts the service again, reusing the proven startup
+  path (auto-detect → wake via `/dev/ttyACM1` → redraw).
+
+The hook runs as root (system-sleep hooks always do), which is why it can do the
+USB reset directly.
+
+Install it once (needs root):
+
+```bash
+sudo install -m 0755 \
+  /home/gpm/Applications/turing-smart-screen-python/tools/turing-smart-screen-sleep-hook.sh \
+  /usr/lib/systemd/system-sleep/turing-smart-screen
+```
+
+> The script targets the `gpm` user's service manager. If you run the service as
+> a different user, edit `SERVICE_USER` at the top of the script before installing.
+
+Test it without a real suspend:
+
+```bash
+# Should turn the screen off (service stops)
+sudo /usr/lib/systemd/system-sleep/turing-smart-screen pre suspend
+# Should bring it back on (service starts, ~10-20 s for the rev C to re-enumerate)
+sudo /usr/lib/systemd/system-sleep/turing-smart-screen post suspend
+```
+
+To remove it: `sudo rm /usr/lib/systemd/system-sleep/turing-smart-screen`.
+
+---
+
 ## Useful commands
 
 ```bash
