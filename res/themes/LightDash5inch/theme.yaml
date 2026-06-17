@@ -17,7 +17,7 @@ static_images:
 STATS:
   CPU:
     PERCENTAGE:
-      INTERVAL: 2
+      INTERVAL: 3
       TEXT:
         SHOW: True
         SHOW_UNIT: True
@@ -46,7 +46,7 @@ STATS:
         AXIS_FONT_SIZE: 9
         BACKGROUND_IMAGE: background.png
     TEMPERATURE:
-      INTERVAL: 2
+      INTERVAL: 3
       TEXT:
         SHOW: True
         SHOW_UNIT: True
@@ -59,7 +59,7 @@ STATS:
         FONT_COLOR: 239, 100, 72
         BACKGROUND_IMAGE: background.png
     FREQUENCY:
-      INTERVAL: 2
+      INTERVAL: 3
       TEXT:
         SHOW: True
         SHOW_UNIT: False
@@ -100,7 +100,7 @@ STATS:
           BACKGROUND_IMAGE: background.png
 
   GPU:
-    INTERVAL: 2
+    INTERVAL: 3
     PERCENTAGE:
       TEXT:
         SHOW: True
@@ -165,7 +165,7 @@ STATS:
         WIDTH: 45
         HEIGHT: 18
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 13
+        FONT_SIZE: 14
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
       GRAPH:
@@ -191,7 +191,7 @@ STATS:
         WIDTH: 45
         HEIGHT: 18
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 13
+        FONT_SIZE: 14
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
       GRAPH:
@@ -207,7 +207,7 @@ STATS:
         BACKGROUND_COLOR: 227, 232, 240
 
   NET:
-    INTERVAL: 2
+    INTERVAL: 3
     ETH:
       DOWNLOAD:
         TEXT:
@@ -244,7 +244,7 @@ STATS:
           WIDTH: 150
           HEIGHT: 20
           FONT: roboto-mono/RobotoMono-Medium.ttf
-          FONT_SIZE: 14
+          FONT_SIZE: 15
           FONT_COLOR: 33, 43, 58
           BACKGROUND_IMAGE: background.png
       UPLOAD:
@@ -282,7 +282,7 @@ STATS:
           WIDTH: 150
           HEIGHT: 20
           FONT: roboto-mono/RobotoMono-Medium.ttf
-          FONT_SIZE: 14
+          FONT_SIZE: 15
           FONT_COLOR: 33, 43, 58
           BACKGROUND_IMAGE: background.png
 
@@ -316,7 +316,7 @@ STATS:
         BACKGROUND_IMAGE: background.png
 
   CUSTOM:
-    INTERVAL: 3
+    INTERVAL: 6
     WeatherIcon:
       TEXT:
         SHOW: True
@@ -347,7 +347,7 @@ STATS:
         WIDTH: 170
         HEIGHT: 18
         FONT: roboto/Roboto-Medium.ttf
-        FONT_SIZE: 12
+        FONT_SIZE: 13
         FONT_COLOR: 132, 142, 158
         BACKGROUND_IMAGE: background.png
     GpuClock:
@@ -380,7 +380,7 @@ STATS:
         WIDTH: 175
         HEIGHT: 24
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 17
+        FONT_SIZE: 18
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     PublicIP:
@@ -391,7 +391,7 @@ STATS:
         WIDTH: 180
         HEIGHT: 24
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 17
+        FONT_SIZE: 18
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     NvmeTemp:
@@ -402,7 +402,7 @@ STATS:
         WIDTH: 56
         HEIGHT: 20
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 15
+        FONT_SIZE: 16
         FONT_COLOR: 239, 100, 72
         BACKGROUND_IMAGE: background.png
     MoboTemp:
@@ -413,7 +413,7 @@ STATS:
         WIDTH: 56
         HEIGHT: 20
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 15
+        FONT_SIZE: 16
         FONT_COLOR: 239, 100, 72
         BACKGROUND_IMAGE: background.png
     Uptime:
@@ -424,7 +424,7 @@ STATS:
         WIDTH: 84
         HEIGHT: 20
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 14
+        FONT_SIZE: 15
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     PingLatency:
@@ -435,7 +435,7 @@ STATS:
         WIDTH: 90
         HEIGHT: 20
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 14
+        FONT_SIZE: 15
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     RamFree:
@@ -446,7 +446,7 @@ STATS:
         WIDTH: 104
         HEIGHT: 16
         FONT: roboto-mono/RobotoMono-Medium.ttf
-        FONT_SIZE: 12
+        FONT_SIZE: 13
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     DiskFree:
@@ -457,7 +457,7 @@ STATS:
         WIDTH: 104
         HEIGHT: 16
         FONT: roboto-mono/RobotoMono-Medium.ttf
-        FONT_SIZE: 12
+        FONT_SIZE: 13
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     GpuVram:
@@ -468,7 +468,7 @@ STATS:
         WIDTH: 106
         HEIGHT: 22
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 15
+        FONT_SIZE: 16
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     GpuPower:
@@ -479,7 +479,7 @@ STATS:
         WIDTH: 86
         HEIGHT: 18
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 15
+        FONT_SIZE: 16
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     GpuMemClock:
@@ -490,7 +490,7 @@ STATS:
         WIDTH: 86
         HEIGHT: 18
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 15
+        FONT_SIZE: 16
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     GpuPstate:
@@ -501,7 +501,7 @@ STATS:
         WIDTH: 86
         HEIGHT: 18
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 15
+        FONT_SIZE: 16
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     ProcCount:
@@ -512,7 +512,7 @@ STATS:
         WIDTH: 86
         HEIGHT: 18
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 15
+        FONT_SIZE: 16
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     LoadAvg5:
@@ -523,7 +523,7 @@ STATS:
         WIDTH: 86
         HEIGHT: 18
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 15
+        FONT_SIZE: 16
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     LoadAvg15:
@@ -534,7 +534,7 @@ STATS:
         WIDTH: 86
         HEIGHT: 18
         FONT: roboto-mono/RobotoMono-Bold.ttf
-        FONT_SIZE: 15
+        FONT_SIZE: 16
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png
     CaseFans:
@@ -545,6 +545,6 @@ STATS:
         WIDTH: 176
         HEIGHT: 16
         FONT: roboto-mono/RobotoMono-Medium.ttf
-        FONT_SIZE: 13
+        FONT_SIZE: 14
         FONT_COLOR: 33, 43, 58
         BACKGROUND_IMAGE: background.png

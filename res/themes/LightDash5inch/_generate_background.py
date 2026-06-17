@@ -52,49 +52,49 @@ def label(xy, text, color=SUB, f=None):
 
 # ===================== HEADER =====================
 label((16, 12), "SYSTEM MONITOR", color=INK, f=F_TITLE(20))
-label((16, 36), "Ryzen 9 3900XT  ·  RTX 4080", color=SUB, f=F_REG(12))
+label((16, 36), "Ryzen 9 3900XT  ·  RTX 4080", color=SUB, f=F_REG(14))
 # divider before the weather widget (weather, date and time are drawn dynamically)
 d.line((282, 12, 282, 48), fill=BORDER, width=1)
 # divider + SSD / motherboard temperature labels (values drawn dynamically)
 d.line((524, 12, 524, 48), fill=BORDER, width=1)
-label((532, 13), "SSD", color=SUB, f=F_MED(10))
-label((532, 33), "MB", color=SUB, f=F_MED(10))
+label((532, 13), "SSD", color=SUB, f=F_MED(11))
+label((532, 33), "MB", color=SUB, f=F_MED(11))
 
 # ===================== CPU CARD =====================
 card((12, 60, 396, 262), accent=CPU_C)
 label((28, 70), "CPU", color=CPU_C, f=F_TITLE(22))
-label((78, 77), "AMD Ryzen 9 3900XT", color=SUB, f=F_REG(13))
-label((30, 158), "USAGE", color=SUB, f=F_MED(11))
+label((78, 77), "AMD Ryzen 9 3900XT", color=SUB, f=F_REG(14))
+label((30, 158), "USAGE", color=SUB, f=F_MED(13))
 # divider
 d.line((26, 176, 382, 176), fill=BORDER, width=1)
 # 4 cells at the bottom
 for cx, lab in ((28, "TEMP"), (120, "FREQ GHz"), (212, "FAN %"), (304, "LOAD")):
-    label((cx, 184), lab, color=SUB, f=F_MED(10))
+    label((cx, 184), lab, color=SUB, f=F_MED(11))
 # second row: load 5m/15m + case fan speeds
 d.line((26, 226, 382, 226), fill=BORDER, width=1)
 for cx, lab in ((28, "LOAD 5m"), (120, "LOAD 15m"), (212, "CASE FANS (RPM)")):
-    label((cx, 230), lab, color=SUB, f=F_MED(9))
+    label((cx, 230), lab, color=SUB, f=F_MED(10))
 
 # ===================== GPU CARD =====================
 card((404, 60, 788, 262), accent=GPU_C)
 label((420, 70), "GPU", color=GPU_C, f=F_TITLE(22))
-label((470, 77), "NVIDIA GeForce RTX 4080", color=SUB, f=F_REG(13))
-label((422, 158), "USAGE", color=SUB, f=F_MED(11))
+label((470, 77), "NVIDIA GeForce RTX 4080", color=SUB, f=F_REG(14))
+label((422, 158), "USAGE", color=SUB, f=F_MED(13))
 d.line((418, 176, 774, 176), fill=BORDER, width=1)
 for cx, lab in ((420, "TEMP"), (512, "CLOCK MHz"), (604, "FAN"), (696, "VRAM")):
-    label((cx, 184), lab, color=SUB, f=F_MED(10))
+    label((cx, 184), lab, color=SUB, f=F_MED(11))
 # second row: power / memory clock / pstate / process count
 d.line((418, 226, 774, 226), fill=BORDER, width=1)
 for cx, lab in ((420, "POWER"), (512, "MEM MHz"), (604, "PSTATE"), (696, "PROCS")):
-    label((cx, 230), lab, color=SUB, f=F_MED(9))
+    label((cx, 230), lab, color=SUB, f=F_MED(10))
 
 # ===================== NETWORK CARD =====================
 card((12, 270, 788, 388))
-label((28, 282), "NETWORK", color=INK, f=F_TITLE(18))
-label((140, 287), "enp39s0", color=SUB, f=F_REG(13))
+label((28, 282), "NETWORK", color=INK, f=F_TITLE(20))
+label((140, 287), "enp39s0", color=SUB, f=F_REG(14))
 # uptime / ping labels (values drawn dynamically)
-label((250, 287), "UPTIME", color=SUB, f=F_MED(10))
-label((560, 287), "PING", color=SUB, f=F_MED(10))
+label((250, 287), "UPTIME", color=SUB, f=F_MED(12))
+label((560, 287), "PING", color=SUB, f=F_MED(12))
 d.line((400, 282, 400, 380), fill=BORDER, width=1)
 
 def arrow(cx, cy, up, color):
@@ -106,24 +106,24 @@ def arrow(cx, cy, up, color):
 
 # DOWNLOAD (left)
 arrow(34, 312, up=False, color=DOWN_C)
-label((46, 304), "DOWNLOAD", color=DOWN_C, f=F_MED(13))
-label((28, 360), "TOTAL", color=SUB, f=F_MED(10))
+label((46, 304), "DOWNLOAD", color=DOWN_C, f=F_MED(15))
+label((28, 360), "TOTAL", color=SUB, f=F_MED(11))
 # UPLOAD (right)
 arrow(424, 312, up=True, color=UP_C)
-label((436, 304), "UPLOAD", color=UP_C, f=F_MED(13))
-label((418, 360), "TOTAL", color=SUB, f=F_MED(10))
+label((436, 304), "UPLOAD", color=UP_C, f=F_MED(15))
+label((418, 360), "TOTAL", color=SUB, f=F_MED(11))
 
 # ===================== IP CARD =====================
 card((12, 396, 396, 470), accent=IP_C)
-label((28, 405), "IP ADDRESS", color=IP_C, f=F_TITLE(15))
-label((28, 430), "LOCAL", color=SUB, f=F_MED(10))
-label((210, 430), "PUBLIC", color=SUB, f=F_MED(10))
+label((28, 405), "IP ADDRESS", color=IP_C, f=F_TITLE(17))
+label((28, 430), "LOCAL", color=SUB, f=F_MED(12))
+label((210, 430), "PUBLIC", color=SUB, f=F_MED(12))
 
 # ===================== SYS CARD (RAM/DISK) =====================
 card((404, 396, 788, 470))
-label((420, 405), "MEMORY / STORAGE", color=INK, f=F_TITLE(14))
-label((420, 428), "RAM", color=SUB, f=F_MED(11))
-label((420, 448), "DISK", color=SUB, f=F_MED(11))
+label((420, 405), "MEMORY / STORAGE", color=INK, f=F_TITLE(17))
+label((420, 428), "RAM", color=SUB, f=F_MED(12))
+label((420, 448), "DISK", color=SUB, f=F_MED(12))
 # bar tracks (background) - the colored fill is drawn on top by the theme
 # shortened to leave room for the absolute used/total GB values on the right
 d.rounded_rectangle((470, 430, 620, 438), radius=4, fill=TRACK)
