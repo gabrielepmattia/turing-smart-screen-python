@@ -17,7 +17,7 @@ static_images:
 STATS:
   CPU:
     PERCENTAGE:
-      INTERVAL: 3
+      INTERVAL: 4
       TEXT:
         SHOW: True
         SHOW_UNIT: True
@@ -46,7 +46,7 @@ STATS:
         AXIS_FONT_SIZE: 9
         BACKGROUND_IMAGE: background.png
     TEMPERATURE:
-      INTERVAL: 3
+      INTERVAL: 4
       TEXT:
         SHOW: True
         SHOW_UNIT: True
@@ -59,7 +59,7 @@ STATS:
         FONT_COLOR: 239, 100, 72
         BACKGROUND_IMAGE: background.png
     FREQUENCY:
-      INTERVAL: 3
+      INTERVAL: 4
       TEXT:
         SHOW: True
         SHOW_UNIT: False
@@ -100,7 +100,7 @@ STATS:
           BACKGROUND_IMAGE: background.png
 
   GPU:
-    INTERVAL: 3
+    INTERVAL: 4
     PERCENTAGE:
       TEXT:
         SHOW: True
@@ -207,7 +207,7 @@ STATS:
         BACKGROUND_COLOR: 227, 232, 240
 
   NET:
-    INTERVAL: 3
+    INTERVAL: 5
     ETH:
       DOWNLOAD:
         TEXT:
@@ -316,7 +316,7 @@ STATS:
         BACKGROUND_IMAGE: background.png
 
   CUSTOM:
-    INTERVAL: 6
+    INTERVAL: 8
     WeatherIcon:
       TEXT:
         SHOW: True

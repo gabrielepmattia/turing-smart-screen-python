@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Fires turing-smart-screen-recover.service every 3h to pre-empt the rev C
+# firmware's silent rendering freeze (which cannot be detected from outside).
+# Each run costs ~20s of screen flicker. Lengthen the interval below once the
+# reduced-refresh theme proves it holds for longer.
+[Unit]
+Description=Periodic preventive recovery of the Turing Smart Screen (every 3h)
+
+[Timer]
+# Every 3 hours on the wall clock (00,03,06,...,21). Calendar-based so it always
+# has a scheduled next-trigger, unlike monotonic timers which need a prior run.
+OnCalendar=*-*-* 00/3:00:00
+# Do not catch up runs missed while the machine was off: a stale recover at boot
+# is pointless (the service starts fresh anyway).
+Persistent=false
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

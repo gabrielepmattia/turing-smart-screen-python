@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# System (root) one-shot that recovers the Turing Smart Screen rev C: it stops
+# the user service, USB-resets the screen's SoC and starts it again. Triggered
+# by turing-smart-screen-recover.timer, or manually: systemctl start <this>.
+#
+# Install (as root):
+#   sudo cp tools/turing-smart-screen-recover.{service,timer} /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now turing-smart-screen-recover.timer
+[Unit]
+Description=Turing Smart Screen - preventive recovery (USB reset + restart)
+Documentation=https://github.com/mathoudebine/turing-smart-screen-python
+
+[Service]
+Type=oneshot
+ExecStart=/home/gpm/Applications/turing-smart-screen-python/tools/turing-smart-screen-recover.sh
